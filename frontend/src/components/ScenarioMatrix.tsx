@@ -19,6 +19,7 @@ export default function ScenarioMatrix({ scenarios }: ScenarioMatrixProps) {
               <th className="p-2 border-r border-[var(--border-color)]">Energy Cost</th>
               <th className="p-2 border-r border-[var(--border-color)]">Power Rec.</th>
               <th className="p-2 border-r border-[var(--border-color)]">Risk</th>
+              <th className="p-2 border-r border-[var(--border-color)]">Days Preserved</th>
               <th className="p-2">Mission Value</th>
             </tr>
           </thead>
@@ -33,11 +34,14 @@ export default function ScenarioMatrix({ scenarios }: ScenarioMatrixProps) {
                   {s.isRecommended && <span className="ml-2 text-[10px] bg-[var(--primary)] text-white px-1 py-0.5 rounded-none">REC</span>}
                 </td>
                 <td className="p-2 border-r border-[var(--border-color)]">{s.energyCost.toFixed(1)} Wh</td>
-                <td className="p-2 border-r border-[var(--border-color)] text-[var(--success)]">+{s.powerRecovery.toFixed(1)} W</td>
+                <td className="p-2 border-r border-[var(--border-color)] text-[var(--success)]">{s.powerRecovery > 0 ? '+' : ''}{s.powerRecovery.toFixed(1)} W</td>
                 <td className="p-2 border-r border-[var(--border-color)]">
                   <span className={`px-1 py-0.5 text-[10px] font-bold ${s.risk === 'HIGH' ? 'bg-[var(--critical)] text-white' : s.risk === 'MEDIUM' ? 'bg-[var(--warning)] text-white' : 'bg-[var(--success)] text-white'}`}>
                     {s.risk}
                   </span>
+                </td>
+                <td className={`p-2 border-r border-[var(--border-color)] font-bold ${s.daysPreserved > 0 ? 'text-[var(--success)]' : s.daysPreserved < 0 ? 'text-[var(--critical)]' : 'text-[var(--secondary)]'}`}>
+                  {s.daysPreserved > 0 ? '+' : ''}{s.daysPreserved}
                 </td>
                 <td className="p-2 font-bold text-lg text-[var(--primary)]">
                   {s.missionValue}

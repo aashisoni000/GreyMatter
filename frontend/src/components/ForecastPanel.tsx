@@ -9,8 +9,8 @@ export default function ForecastPanel() {
 
   return (
     <div className="flex flex-col bg-[var(--surface)] border border-[var(--border-color)]">
-      <div className="bg-[var(--foreground)] text-[var(--surface)] px-3 py-2 text-xs font-bold uppercase tracking-widest border-b border-[var(--border-color)]">
-        Forecast (No Action Trajectory)
+      <div className="bg-[var(--foreground)] text-[var(--surface)] px-3 py-2 text-xs font-bold uppercase tracking-widest border-b border-[var(--border-color)] flex justify-between">
+        <span>Forecast (No Action Trajectory)</span>
       </div>
       <div className="p-4 flex flex-col gap-5">
         
@@ -65,10 +65,35 @@ export default function ForecastPanel() {
         </div>
 
         {/* X-axis labels */}
-        <div className="flex justify-between mt-1 px-1">
+        <div className="flex justify-between mt-1 px-1 border-b border-[var(--border-color)] pb-3">
           {horizons.map((h, idx) => (
             <span key={idx} className="font-mono text-[10px] text-[var(--secondary)] w-[20%] text-center">{h}</span>
           ))}
+        </div>
+
+        {/* Model Inputs Panel */}
+        <div className="flex flex-col gap-2 mt-1">
+          <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--secondary)]">
+            Forecast Inputs
+          </span>
+          <div className="grid grid-cols-2 gap-2 text-[9px] font-mono uppercase text-[var(--foreground)]">
+            <div className="flex items-center gap-2 border border-[var(--border-color)] p-1.5 bg-[var(--background)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)]"></span>
+              Historical Telemetry
+            </div>
+            <div className="flex items-center gap-2 border border-[var(--border-color)] p-1.5 bg-[var(--background)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)]"></span>
+              Dust Growth Model
+            </div>
+            <div className="flex items-center gap-2 border border-[var(--border-color)] p-1.5 bg-[var(--background)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)]"></span>
+              Power Trend Analysis
+            </div>
+            <div className="flex items-center gap-2 border border-[var(--border-color)] p-1.5 bg-[var(--background)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)]"></span>
+              Cleaning History
+            </div>
+          </div>
         </div>
 
       </div>

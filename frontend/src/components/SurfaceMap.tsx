@@ -7,15 +7,15 @@ interface SurfaceMapProps {
 
 export default function SurfaceMap({ zones }: SurfaceMapProps) {
   // Helpers for summary
-  const totalDust = zones.reduce((acc, zone) => acc + zone.dustPercent, 0) / zones.length;
-  const powerLoss = zones.reduce((acc, zone) => acc + (zone.dustPercent > 50 ? 5 : 0), 0); // arbitrary calc for UI display
+  const recoverablePower = 8.2; 
   const highPriorityCount = zones.filter(z => z.priority === 'HIGH' || z.priority === 'CRITICAL').length;
+  const targetSurfaceArea = 18; 
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'CRITICAL': return 'border-[var(--critical)] text-[var(--critical)] bg-[rgba(220,38,38,0.1)]';
       case 'HIGH': return 'border-[var(--warning)] text-[var(--warning)] bg-[rgba(217,119,6,0.1)]';
-      case 'MONITOR': return 'border-[#eab308] text-[#eab308]'; // yellow
+      case 'MONITOR': return 'border-[#eab308] text-[#eab308]'; 
       default: return 'border-[var(--success)] text-[var(--success)]';
     }
   };
@@ -38,6 +38,13 @@ export default function SurfaceMap({ zones }: SurfaceMapProps) {
       
       {/* Map Grid */}
       <div className="flex-1 p-4 bg-[var(--background)] flex flex-col justify-center items-center relative overflow-hidden min-h-[300px]">
+        
+        {/* Dust Migration Overlay Indicator */}
+        <div className="absolute top-2 left-2 text-[var(--secondary)] flex items-center gap-1 font-mono text-[9px] uppercase tracking-widest z-0 opacity-50">
+          <span>Migration Vector</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="19" x2="19" y2="5"></line><polyline points="19 19 19 5 5 5"></polyline></svg>
+        </div>
+
         <div className="grid grid-cols-4 gap-2 w-full max-w-lg h-full max-h-lg relative z-10">
           {zones.map((zone) => {
             const isTarget = ['F', 'G', 'K'].includes(zone.id);
@@ -46,12 +53,17 @@ export default function SurfaceMap({ zones }: SurfaceMapProps) {
                 key={zone.id} 
                 className={`relative flex flex-col justify-between border-2 p-1.5 font-mono text-[10px] uppercase tracking-wider ${getPriorityColor(zone.priority)} ${isTarget ? 'ring-2 ring-offset-2 ring-[var(--critical)] ring-offset-[var(--background)] z-20 shadow-[0_0_15px_rgba(220,38,38,0.5)] bg-[rgba(220,38,38,0.15)]' : 'bg-[var(--surface)]'}`}
               >
+                {/* Migration arrows in each cell pointing top-right */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="19" x2="19" y2="5"></line><polyline points="19 19 19 5 5 5"></polyline></svg>
+                </div>
+
                 {isTarget && (
                   <div className="absolute -top-3 -right-3 w-6 h-6 bg-[var(--critical)] text-white flex items-center justify-center font-bold text-xs rounded-none z-30 animate-pulse">
                     TGT
                   </div>
                 )}
-                <div className="flex justify-between items-start font-bold">
+                <div className="flex justify-between items-start font-bold relative z-10">
                   <span className="text-lg">{zone.id}</span>
                   <div className="flex flex-col items-end gap-1">
                     <span className={`px-1 py-0.5 text-white ${getPriorityBgColor(zone.priority)}`}>
@@ -59,7 +71,7 @@ export default function SurfaceMap({ zones }: SurfaceMapProps) {
                     </span>
                   </div>
                 </div>
-                <div className="flex flex-col mt-2 border-t border-current pt-1">
+                <div className="flex flex-col mt-2 border-t border-current pt-1 relative z-10">
                   <div className="flex justify-between">
                     <span>Dust</span>
                     <span>{zone.dustPercent}%</span>
@@ -78,16 +90,16 @@ export default function SurfaceMap({ zones }: SurfaceMapProps) {
       {/* Summary Footer */}
       <div className="bg-[var(--surface)] border-t border-[var(--border-color)] px-4 py-3 grid grid-cols-3 gap-4">
         <div className="flex flex-col">
-          <span className="text-[10px] text-[var(--secondary)] uppercase tracking-widest">Total Dust Coverage</span>
-          <span className="font-mono text-lg">{totalDust.toFixed(1)}%</span>
-        </div>
-        <div className="flex flex-col border-l border-[var(--border-color)] pl-4">
-          <span className="text-[10px] text-[var(--secondary)] uppercase tracking-widest">Projected Power Loss</span>
-          <span className="font-mono text-lg text-[var(--warning)]">{powerLoss.toFixed(1)} W</span>
+          <span className="text-[10px] text-[var(--secondary)] uppercase tracking-widest">Recoverable Power</span>
+          <span className="font-mono text-lg text-[var(--success)]">+{recoverablePower.toFixed(1)} W</span>
         </div>
         <div className="flex flex-col border-l border-[var(--border-color)] pl-4">
           <span className="text-[10px] text-[var(--secondary)] uppercase tracking-widest">High Priority Zones</span>
           <span className="font-mono text-lg text-[var(--critical)]">{highPriorityCount}</span>
+        </div>
+        <div className="flex flex-col border-l border-[var(--border-color)] pl-4">
+          <span className="text-[10px] text-[var(--secondary)] uppercase tracking-widest">Target Surface Area</span>
+          <span className="font-mono text-lg text-[var(--primary)]">{targetSurfaceArea}%</span>
         </div>
       </div>
     </div>

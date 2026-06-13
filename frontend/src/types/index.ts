@@ -22,6 +22,7 @@ export interface MitigationScenario {
   powerRecovery: number; // W
   risk: 'LOW' | 'MEDIUM' | 'HIGH';
   missionValue: number; // metric score
+  daysPreserved: number; // days
   isRecommended: boolean;
 }
 

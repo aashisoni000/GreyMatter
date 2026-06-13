@@ -26,30 +26,55 @@ export default function DecisionReasoning() {
         </div>
 
         <div className="flex flex-col gap-1 border-b border-[var(--border-color)] pb-2">
-          <span className="text-[var(--secondary)] uppercase text-xs">Reasoning</span>
-          <p className="text-xs leading-tight">
-            Dust concentrated in high-value regions. High priority zones selected to maximize power delta while minimizing HV budget utilization.
+          <span className="text-[var(--secondary)] uppercase text-[10px] tracking-widest">Engineering Reasoning</span>
+          <p className="text-[10px] leading-relaxed uppercase text-[var(--foreground)] font-bold">
+            Projected recovery exceeds minimum operational threshold.
+            <br />
+            Battery reserve remains within constraint bounds.
+            <br />
+            Targeted mitigation maximizes watt-per-Wh return.
+            <br />
+            Science schedule unaffected.
+            <br />
+            Expected net mission value highest among evaluated actions.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 border-b border-[var(--border-color)] pb-2">
-          <div className="flex flex-col">
-            <span className="text-[var(--secondary)] uppercase text-[10px]">Expected Recovery</span>
-            <span className="text-[var(--success)] font-bold">+8.2 W</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-[var(--secondary)] uppercase text-[10px]">Energy Cost</span>
-            <span className="font-bold">1.3 Wh</span>
-          </div>
-        </div>
+        <div className="flex flex-col gap-2 border-b border-[var(--border-color)] pb-2">
+          <span className="text-[var(--secondary)] uppercase text-[10px] tracking-widest">Decision Factors (Mission Value Weights)</span>
+          <div className="flex flex-col gap-1 text-[10px]">
+            <div className="flex justify-between items-center">
+              <span className="uppercase">Power Recovery</span>
+              <span className="font-bold">40%</span>
+            </div>
+            <div className="w-full bg-[var(--background)] h-1 mb-1">
+              <div className="bg-[var(--primary)] h-full" style={{ width: '40%' }}></div>
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <span className="text-[var(--success)] uppercase text-xs font-bold flex items-center gap-2 before:content-['>'] before:text-[var(--success)]">
-            No science-operation conflict.
-          </span>
-          <span className="text-[var(--success)] uppercase text-xs font-bold flex items-center gap-2 before:content-['>'] before:text-[var(--success)]">
-            Highest projected net benefit.
-          </span>
+            <div className="flex justify-between items-center">
+              <span className="uppercase">Energy Cost</span>
+              <span className="font-bold">30%</span>
+            </div>
+            <div className="w-full bg-[var(--background)] h-1 mb-1">
+              <div className="bg-[var(--primary)] h-full" style={{ width: '30%' }}></div>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="uppercase">System Health</span>
+              <span className="font-bold">20%</span>
+            </div>
+            <div className="w-full bg-[var(--background)] h-1 mb-1">
+              <div className="bg-[var(--primary)] h-full" style={{ width: '20%' }}></div>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="uppercase">Mission Constraints</span>
+              <span className="font-bold">10%</span>
+            </div>
+            <div className="w-full bg-[var(--background)] h-1">
+              <div className="bg-[var(--primary)] h-full" style={{ width: '10%' }}></div>
+            </div>
+          </div>
         </div>
 
       </div>
