@@ -54,7 +54,7 @@ export default function MetricCard({
 
       {/* Value */}
       <div className="mb-2">
-        <span className="text-white text-[28px] font-bold tracking-tight">{value}</span>
+        <span key={value} className="text-white text-[28px] font-bold tracking-tight inline-block animate-value-change">{value}</span>
       </div>
 
       {/* Subtitle */}

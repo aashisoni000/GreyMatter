@@ -3,16 +3,20 @@ import { SolarPanelZone } from '../types';
 
 interface SurfaceMapHeatmapProps {
   zones: SolarPanelZone[];
+  activeScenarioId: string;
+  targets: string[];
 }
 
-export default function SurfaceMapHeatmap({ zones }: SurfaceMapHeatmapProps) {
+export default function SurfaceMapHeatmap({ zones, activeScenarioId, targets }: SurfaceMapHeatmapProps) {
   const [hoveredZone, setHoveredZone] = useState<SolarPanelZone | null>(null);
 
-  // Helper to derive mission value consistent with ZonePriorityAnalysis
+  // Helper to derive mission value consistent with Scenario definition
   const getMissionValue = (zone: SolarPanelZone) => {
-    if (zone.id === 'F') return 95;
-    if (zone.id === 'G') return 93;
-    if (zone.id === 'K') return 90;
+    if (activeScenarioId === 'dust') {
+      if (zone.id === 'F') return 95;
+      if (zone.id === 'G') return 93;
+      if (zone.id === 'K') return 90;
+    }
     return Math.floor(zone.dustPercent * 0.9);
   };
 
@@ -53,10 +57,12 @@ export default function SurfaceMapHeatmap({ zones }: SurfaceMapHeatmapProps) {
             <span className="w-2.5 h-2.5 rounded-sm bg-[#ef4444]"></span>
             <span>80%+</span>
           </div>
-          <div className="flex items-center gap-1 border-l border-white/10 pl-2">
-            <span className="w-2.5 h-2.5 rounded-sm border border-blue-500 bg-blue-500/10"></span>
-            <span>Target</span>
-          </div>
+          {targets.length > 0 && (
+            <div className="flex items-center gap-1 border-l border-white/10 pl-2">
+              <span className="w-2.5 h-2.5 rounded-sm border border-blue-500 bg-blue-500/10"></span>
+              <span>Target</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -64,7 +70,7 @@ export default function SurfaceMapHeatmap({ zones }: SurfaceMapHeatmapProps) {
       <div className="flex-1 flex items-center justify-center py-4 min-h-[340px] relative">
         <div className="grid grid-cols-4 gap-4 w-full max-w-[520px]">
           {zones.map((zone) => {
-            const isTarget = ['F', 'G', 'K'].includes(zone.id);
+            const isTarget = targets.includes(zone.id);
             const heatColor = getHeatColor(zone);
             const targetRing = isTarget 
               ? 'ring-2 ring-blue-500 ring-offset-2 ring-offset-[#141517] shadow-[0_0_15px_rgba(59,130,246,0.65)]' 
@@ -75,7 +81,7 @@ export default function SurfaceMapHeatmap({ zones }: SurfaceMapHeatmapProps) {
                 key={zone.id}
                 onMouseEnter={() => setHoveredZone(zone)}
                 onMouseLeave={() => setHoveredZone(null)}
-                className={`aspect-square rounded-2xl flex flex-col justify-between p-3 relative cursor-pointer border border-white/5 overflow-hidden transition-all duration-200 hover:scale-105 hover:border-white/20 ${heatColor} ${targetRing}`}
+                className={`aspect-square rounded-2xl flex flex-col justify-between p-3 relative cursor-pointer border border-white/5 overflow-hidden transition-all duration-500 hover:scale-105 hover:border-white/20 ${heatColor} ${targetRing}`}
               >
                 {/* Visual Silicon Wafer Grid Overlay representing electrode trace lines */}
                 <div
@@ -140,7 +146,7 @@ export default function SurfaceMapHeatmap({ zones }: SurfaceMapHeatmapProps) {
           <div className="absolute bg-[#1a1b1e] border border-white/10 p-3.5 rounded-xl shadow-2xl z-20 w-48 font-sans text-xs bottom-1 left-1/2 -translate-x-1/2 pointer-events-none">
             <div className="flex justify-between items-center mb-1.5 pb-1.5 border-b border-white/5">
               <span className="text-white font-bold text-sm">Zone {hoveredZone.id}</span>
-              {['F', 'G', 'K'].includes(hoveredZone.id) ? (
+              {targets.includes(hoveredZone.id) ? (
                 <span className="text-[9px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-1.5 py-0.5 rounded font-semibold uppercase tracking-wider">Target</span>
               ) : (
                 <span className="text-[9px] bg-white/5 text-gray-400 border border-white/5 px-1.5 py-0.5 rounded font-semibold uppercase tracking-wider">{hoveredZone.priority}</span>
@@ -171,9 +177,15 @@ export default function SurfaceMapHeatmap({ zones }: SurfaceMapHeatmapProps) {
         </span>
         <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold">
           {/* Target Zones Badge */}
-          <div className="bg-[#1e293b] border border-blue-500/20 px-2 py-1 rounded-md text-blue-400 flex items-center gap-1.5">
+          <div className={`border px-2 py-1 rounded-md flex items-center gap-1.5 ${
+            targets.length > 0
+              ? 'bg-[#1e293b] border-blue-500/20 text-blue-400'
+              : 'bg-[#1c1d21] border-white/5 text-gray-400'
+          }`}>
             <span className="opacity-70 text-[8.5px]">TARGETS</span>
-            <span className="font-mono font-bold">F + G + K</span>
+            <span className="font-mono font-bold">
+              {targets.length > 0 ? targets.join(' + ') : 'MONITORING ONLY'}
+            </span>
           </div>
 
           <span className="text-gray-600">➔</span>
@@ -181,7 +193,9 @@ export default function SurfaceMapHeatmap({ zones }: SurfaceMapHeatmapProps) {
           {/* Recovery Badge */}
           <div className="bg-emerald-950/20 border border-emerald-500/20 px-2 py-1 rounded-md text-emerald-400 flex items-center gap-1.5">
             <span className="opacity-70 text-[8.5px]">RECOVERY</span>
-            <span className="font-mono font-bold">+8.2 W</span>
+            <span className="font-mono font-bold">
+              {activeScenarioId === 'dust' ? '+8.2 W' : '+2.1 W'}
+            </span>
           </div>
 
           <span className="text-gray-600">➔</span>
@@ -189,15 +203,21 @@ export default function SurfaceMapHeatmap({ zones }: SurfaceMapHeatmapProps) {
           {/* Score Badge */}
           <div className="bg-amber-950/20 border border-amber-500/20 px-2 py-1 rounded-md text-[#f59e0b] flex items-center gap-1.5">
             <span className="opacity-70 text-[8.5px]">SCORE</span>
-            <span className="font-mono font-bold">92 / 100</span>
+            <span className="font-mono font-bold">
+              {activeScenarioId === 'dust' ? '92 / 100' : '87 / 100'}
+            </span>
           </div>
 
           <span className="text-gray-600">➔</span>
 
           {/* Decision badge */}
-          <div className="bg-[#291714] border border-[#f0522f]/35 px-2 py-1 rounded-md text-[#f0522f] flex items-center gap-1.5 font-bold animate-pulse">
+          <div className={`border px-2 py-1 rounded-md flex items-center gap-1.5 font-bold animate-pulse ${
+            activeScenarioId === 'dust'
+              ? 'bg-[#291714] border-[#f0522f]/35 text-[#f0522f]'
+              : 'bg-[#1d2433] border-blue-500/35 text-blue-400'
+          }`}>
             <span className="opacity-70 text-[8.5px]">OPTIMAL DECISION</span>
-            <span>PARTIAL CLEAN</span>
+            <span>{activeScenarioId === 'dust' ? 'PARTIAL CLEAN' : 'WAIT'}</span>
           </div>
         </div>
       </div>
