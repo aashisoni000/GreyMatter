@@ -1,21 +1,30 @@
 import React, { useState } from 'react';
 
-export default function OutcomeLineChart() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(3); // Default to index 3 (24h) like mockup
+interface ChartPoint {
+  hour: string;
+  partial: number;
+  wait: number;
+  full: number;
+  x: number;
+}
 
-  const chartData = [
-    { hour: '0h', partial: 215, wait: 215, full: 215, x: 50 },
-    { hour: '8h', partial: 220, wait: 208, full: 232, x: 120 },
-    { hour: '16h', partial: 222, wait: 198, full: 238, x: 190 },
-    { hour: '24h', partial: 223, wait: 184, full: 240, x: 260 }, // Hovered by default
-    { hour: '32h', partial: 221, wait: 168, full: 240, x: 330 },
-    { hour: '40h', partial: 219, wait: 151, full: 239, x: 400 },
-    { hour: '48h', partial: 218, wait: 132, full: 238, x: 470 }
-  ];
+interface OutcomeLineChartProps {
+  chartData: ChartPoint[];
+  activeScenarioId: string;
+  recommendedAction: string;
+}
 
-  // Map power values to SVG Y coordinate (260W = Y:30, 100W = Y:170)
+export default function OutcomeLineChart({
+  chartData,
+  activeScenarioId,
+  recommendedAction,
+}: OutcomeLineChartProps) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(3); // Default to index 3 (24h)
+
+  // Map power values to SVG Y coordinate (260W = Y:30, 40W = Y:180)
+  // Let's adjust getY to handle a wider scale if values drop to 50W in Scenario 2
   const getY = (val: number) => {
-    const minVal = 100;
+    const minVal = 40;
     const maxVal = 260;
     const minY = 170;
     const maxY = 30;
@@ -24,6 +33,7 @@ export default function OutcomeLineChart() {
 
   // SVG paths using cubic bezier formatting
   const getCurvePath = (key: 'partial' | 'wait' | 'full') => {
+    if (!chartData || chartData.length === 0) return '';
     let path = `M ${chartData[0].x} ${getY(chartData[0][key])}`;
     for (let i = 0; i < chartData.length - 1; i++) {
       const curr = chartData[i];
@@ -35,6 +45,17 @@ export default function OutcomeLineChart() {
       path += ` C ${cpX1} ${cpY1}, ${cpX2} ${cpY2}, ${next.x} ${getY(next[key])}`;
     }
     return path;
+  };
+
+  // Predefined annotations and coordinates per scenario to avoid overlaps
+  const annotations = activeScenarioId === 'dust' ? {
+    full: { x: 310, y: 24, text: "Full Clean ➔ Max Power / High Cost" },
+    partial: { x: 290, y: 70, text: "Partial Clean ➔ Power Stabilizes" },
+    wait: { x: 310, y: 145, text: "Wait ➔ Power Declines" },
+  } : {
+    wait: { x: 310, y: 80, text: "Wait ➔ Optimal / Preserves Battery" },
+    partial: { x: 290, y: 118, text: "Partial Clean ➔ Battery Drain" },
+    full: { x: 310, y: 175, text: "Full Clean ➔ Wasteful / Depletion" },
   };
 
   return (
@@ -49,15 +70,15 @@ export default function OutcomeLineChart() {
         <div className="flex items-center gap-3 text-[10px] text-[#9ca3af] font-semibold shrink-0">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-[3px] rounded bg-[#f0522f]"></span>
-            <span>Partial Clean (Rec)</span>
+            <span>Partial Clean {recommendedAction === 'Partial Clean' ? '(Rec)' : ''}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-[3px] rounded bg-[#3b82f6]"></span>
-            <span>Wait / Decline</span>
+            <span>Wait / Decline {recommendedAction === 'Wait' ? '(Rec)' : ''}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-[3px] rounded bg-[#10b981]"></span>
-            <span>Full Clean</span>
+            <span>Full Clean {recommendedAction === 'Full Clean' ? '(Rec)' : ''}</span>
           </div>
         </div>
       </div>
@@ -80,7 +101,7 @@ export default function OutcomeLineChart() {
           <text x="18" y="174" className="fill-[#6b7280] text-[9px] font-mono font-medium">80W</text>
 
           {/* Dotted Vertical Marker Line */}
-          {hoveredIndex !== null && (
+          {hoveredIndex !== null && chartData[hoveredIndex] && (
             <line
               x1={chartData[hoveredIndex].x}
               y1="30"
@@ -92,28 +113,61 @@ export default function OutcomeLineChart() {
             />
           )}
 
-          {/* Line paths */}
-          <path d={getCurvePath('wait')} fill="none" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" opacity="0.85" />
-          <path d={getCurvePath('full')} fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" opacity="0.85" />
-          <path d={getCurvePath('partial')} fill="none" stroke="#f0522f" strokeWidth="3.5" strokeLinecap="round" />
+          {/* Line paths - dynamically highlighting the recommended trajectory */}
+          <path
+            d={getCurvePath('wait')}
+            fill="none"
+            stroke="#3b82f6"
+            strokeWidth={recommendedAction === 'Wait' ? '3.5' : '2.0'}
+            strokeLinecap="round"
+            opacity={recommendedAction === 'Wait' ? '1.0' : '0.7'}
+          />
+          <path
+            d={getCurvePath('full')}
+            fill="none"
+            stroke="#10b981"
+            strokeWidth={recommendedAction === 'Full Clean' ? '3.5' : '2.0'}
+            strokeLinecap="round"
+            opacity={recommendedAction === 'Full Clean' ? '1.0' : '0.7'}
+          />
+          <path
+            d={getCurvePath('partial')}
+            fill="none"
+            stroke="#f0522f"
+            strokeWidth={recommendedAction === 'Partial Clean' ? '3.5' : '2.0'}
+            strokeLinecap="round"
+            opacity={recommendedAction === 'Partial Clean' ? '1.0' : '0.7'}
+          />
 
-          {/* Dotted prediction annotations directly inside the graph lines */}
-          <text x="310" y="24" className="fill-[#10b981] text-[7.5px] font-extrabold uppercase tracking-wide opacity-90 select-none">
-            Full Clean ➔ Max Power / High Cost
+          {/* Dynamic predictions annotations placed next to the curves */}
+          <text
+            x={annotations.full.x}
+            y={annotations.full.y}
+            className="fill-[#10b981] text-[7.5px] font-extrabold uppercase tracking-wide opacity-90 select-none"
+          >
+            {annotations.full.text}
           </text>
-          <text x="290" y="70" className="fill-[#f0522f] text-[7.5px] font-extrabold uppercase tracking-wide select-none">
-            Partial Clean ➔ Power Stabilizes
+          <text
+            x={annotations.partial.x}
+            y={annotations.partial.y}
+            className="fill-[#f0522f] text-[7.5px] font-extrabold uppercase tracking-wide select-none"
+          >
+            {annotations.partial.text}
           </text>
-          <text x="310" y="145" className="fill-[#3b82f6] text-[7.5px] font-extrabold uppercase tracking-wide opacity-95 select-none">
-            Wait ➔ Power Declines
+          <text
+            x={annotations.wait.x}
+            y={annotations.wait.y}
+            className="fill-[#3b82f6] text-[7.5px] font-extrabold uppercase tracking-wide opacity-95 select-none"
+          >
+            {annotations.wait.text}
           </text>
 
           {/* Data Nodes for Hovered Index */}
-          {hoveredIndex !== null && (
+          {hoveredIndex !== null && chartData[hoveredIndex] && (
             <>
-              <circle cx={chartData[hoveredIndex].x} cy={getY(chartData[hoveredIndex].wait)} r="4.5" className="fill-[#141517] stroke-[#3b82f6] stroke-[2.5px]" />
-              <circle cx={chartData[hoveredIndex].x} cy={getY(chartData[hoveredIndex].full)} r="4.5" className="fill-[#141517] stroke-[#10b981] stroke-[2.5px]" />
-              <circle cx={chartData[hoveredIndex].x} cy={getY(chartData[hoveredIndex].partial)} r="5.5" className="fill-[#141517] stroke-[#f0522f] stroke-[3px]" />
+              <circle cx={chartData[hoveredIndex].x} cy={getY(chartData[hoveredIndex].wait)} r={recommendedAction === 'Wait' ? '5.5' : '4.5'} className={`fill-[#141517] stroke-[#3b82f6] ${recommendedAction === 'Wait' ? 'stroke-[3px]' : 'stroke-[2.5px]'}`} />
+              <circle cx={chartData[hoveredIndex].x} cy={getY(chartData[hoveredIndex].full)} r={recommendedAction === 'Full Clean' ? '5.5' : '4.5'} className={`fill-[#141517] stroke-[#10b981] ${recommendedAction === 'Full Clean' ? 'stroke-[3px]' : 'stroke-[2.5px]'}`} />
+              <circle cx={chartData[hoveredIndex].x} cy={getY(chartData[hoveredIndex].partial)} r={recommendedAction === 'Partial Clean' ? '5.5' : '4.5'} className={`fill-[#141517] stroke-[#f0522f] ${recommendedAction === 'Partial Clean' ? 'stroke-[3px]' : 'stroke-[2.5px]'}`} />
             </>
           )}
 
@@ -147,7 +201,7 @@ export default function OutcomeLineChart() {
         </svg>
 
         {/* Dynamic Tooltip popover */}
-        {hoveredIndex !== null && (
+        {hoveredIndex !== null && chartData[hoveredIndex] && (
           <div
             className="absolute bg-[#1a1b1e] border border-white/10 p-3.5 rounded-xl shadow-2xl z-20 w-44 font-sans text-xs pointer-events-none transition-all duration-200"
             style={{
@@ -159,30 +213,32 @@ export default function OutcomeLineChart() {
             <div className="text-white font-bold mb-1.5 pb-1 border-b border-white/5 flex justify-between items-center">
               <span>Projection: +{chartData[hoveredIndex].hour}</span>
               {hoveredIndex === 3 && (
-                <span className="text-[9px] bg-red-500/10 text-red-400 px-1 py-0.5 rounded font-semibold uppercase tracking-wider scale-95 animate-pulse">Deadline</span>
+                <span className="text-[9px] bg-red-500/10 text-red-400 px-1 py-0.5 rounded font-semibold uppercase tracking-wider scale-95 animate-pulse">
+                  {activeScenarioId === 'dust' ? 'Deadline' : 'Critical'}
+                </span>
               )}
             </div>
             <div className="flex flex-col gap-1 text-[#9ca3af]">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#f0522f]"></span>
-                  <span>Partial (Rec):</span>
+                  <span>Partial {recommendedAction === 'Partial Clean' ? '(Rec)' : ''}:</span>
                 </div>
                 <span className="text-white font-mono font-bold">{chartData[hoveredIndex].partial} W</span>
               </div>
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></span>
-                  <span>Wait:</span>
+                  <span>Wait {recommendedAction === 'Wait' ? '(Rec)' : ''}:</span>
                 </div>
-                <span className="text-white font-mono font-semibold">{chartData[hoveredIndex].wait} W</span>
+                <span className="text-white font-mono font-bold">{chartData[hoveredIndex].wait} W</span>
               </div>
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]"></span>
-                  <span>Full Clean:</span>
+                  <span>Full Clean {recommendedAction === 'Full Clean' ? '(Rec)' : ''}:</span>
                 </div>
-                <span className="text-white font-mono font-semibold">{chartData[hoveredIndex].full} W</span>
+                <span className="text-white font-mono font-bold">{chartData[hoveredIndex].full} W</span>
               </div>
             </div>
           </div>

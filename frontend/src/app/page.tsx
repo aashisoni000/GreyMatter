@@ -8,12 +8,14 @@ import SafetyConstraintsList from '@/components/SafetyConstraintsList';
 import ScenarioMatrixTable from '@/components/ScenarioMatrixTable';
 import RecommendedActionCard from '@/components/RecommendedActionCard';
 import MissionValueEngine from '@/components/MissionValueEngine';
-import { mockDashboardData } from '@/data/mockData';
+import { scenariosData } from '@/data/mockData';
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeScenarioId, setActiveScenarioId] = useState<'dust' | 'low-sunlight'>('dust');
   
-  const { missionStatus, telemetry, zones, scenarios, constraints } = mockDashboardData;
+  const activeScenario = scenariosData[activeScenarioId];
+  const { missionStatus, telemetry, zones, scenarios, constraints } = activeScenario;
 
   // Filter items based on search input
   const filteredConstraints = constraints.filter((c) =>
@@ -77,6 +79,32 @@ export default function DashboardPage() {
         {/* Right-side Utilities & Lunar Context Labels */}
         <div className="flex flex-wrap items-center gap-3.5 shrink-0 self-end lg:self-auto font-sans justify-end">
           
+          {/* Scenario Selector Segmented Control */}
+          <div className="flex bg-[#1c1d21] p-1 border border-white/5 rounded-lg text-[9px] font-bold uppercase tracking-wider items-center">
+            <button
+              onClick={() => setActiveScenarioId('dust')}
+              className={`px-3 py-1.5 rounded-md cursor-pointer transition-all duration-300 font-sans tracking-widest ${
+                activeScenarioId === 'dust'
+                  ? 'bg-[#f0522f] text-white shadow-md'
+                  : 'text-[#9ca3af] hover:text-white hover:bg-[#141517]'
+              }`}
+            >
+              DUST EVENT
+            </button>
+            <button
+              onClick={() => setActiveScenarioId('low-sunlight')}
+              className={`px-3 py-1.5 rounded-md cursor-pointer transition-all duration-300 font-sans tracking-widest ${
+                activeScenarioId === 'low-sunlight'
+                  ? 'bg-[#f0522f] text-white shadow-md'
+                  : 'text-[#9ca3af] hover:text-white hover:bg-[#141517]'
+              }`}
+            >
+              LOW-SUNLIGHT
+            </button>
+          </div>
+
+          <div className="h-5 w-[1px] bg-white/10 hidden sm:block"></div>
+
           {/* Lunar Context Indicators */}
           <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold tracking-wide">
             <span className="text-[#9ca3af] bg-[#1c1d21] border border-white/5 px-2.5 py-1.5 rounded-lg uppercase">
@@ -85,12 +113,25 @@ export default function DashboardPage() {
             <span className="text-[#9ca3af] bg-[#1c1d21] border border-white/5 px-2.5 py-1.5 rounded-lg uppercase">
               Array Alpha
             </span>
-            <span className="text-[#f59e0b] bg-[#1c1d21] border border-[#f59e0b]/20 px-2.5 py-1.5 rounded-lg uppercase animate-pulse">
-              Regolith: High
-            </span>
-            <span className="text-emerald-400 bg-[#1c1d21] border border-emerald-500/20 px-2.5 py-1.5 rounded-lg uppercase">
-              Budget: 5Wh max
-            </span>
+            {activeScenarioId === 'dust' ? (
+              <>
+                <span className="text-[#f59e0b] bg-[#1c1d21] border border-[#f59e0b]/20 px-2.5 py-1.5 rounded-lg uppercase animate-pulse">
+                  Regolith: High
+                </span>
+                <span className="text-emerald-400 bg-[#1c1d21] border border-emerald-500/20 px-2.5 py-1.5 rounded-lg uppercase">
+                  Budget: 5Wh max
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="text-emerald-400 bg-[#1c1d21] border border-emerald-500/20 px-2.5 py-1.5 rounded-lg uppercase">
+                  Regolith: Nominal
+                </span>
+                <span className="text-rose-400 bg-[#1c1d21] border border-rose-500/20 px-2.5 py-1.5 rounded-lg uppercase animate-pulse">
+                  Battery: 8.1% Critical
+                </span>
+              </>
+            )}
           </div>
 
           <div className="h-5 w-[1px] bg-white/10 hidden sm:block"></div>
@@ -138,19 +179,19 @@ export default function DashboardPage() {
             <MetricCard
               title="Dust Coverage"
               value={`${telemetry.dustCoverage}%`}
-              status="WARNING"
+              status={telemetry.dustCoverage > 30 ? 'WARNING' : 'NOMINAL'}
               subtitle="Target threshold: <30.0%"
             />
             <MetricCard
               title="Solar Output"
               value={`${telemetry.solarOutput}W`}
-              status="NOMINAL"
+              status={activeScenarioId === 'dust' ? 'NOMINAL' : 'WARNING'}
               subtitle="Current solar array generation"
             />
             <MetricCard
               title="Battery Margin"
               value={`${telemetry.batteryMargin}%`}
-              status="CRITICAL"
+              status={telemetry.batteryMargin < 10 ? 'CRITICAL' : telemetry.batteryMargin < 20 ? 'WARNING' : 'NOMINAL'}
               subtitle="Warning: limit is 20.0%"
             />
             <MetricCard
@@ -164,20 +205,43 @@ export default function DashboardPage() {
           {/* Row 1: Surface Map Centerpiece (Col 8) & Recommended Action Hero (Col 4) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
             <div className="lg:col-span-8">
-              <SurfaceMapHeatmap zones={zones} />
+              <SurfaceMapHeatmap
+                zones={zones}
+                activeScenarioId={activeScenarioId}
+                targets={activeScenario.targets}
+              />
             </div>
             <div className="lg:col-span-4">
-              <RecommendedActionCard />
+              <RecommendedActionCard
+                action={activeScenario.recommendedAction.action}
+                targets={activeScenario.recommendedAction.targets}
+                missionValue={activeScenario.recommendedAction.missionValue}
+                powerRecovery={activeScenario.recommendedAction.powerRecovery}
+                lifePreserved={activeScenario.recommendedAction.lifePreserved}
+                energyCost={activeScenario.recommendedAction.energyCost}
+                scienceConflict={activeScenario.recommendedAction.scienceConflict}
+                isWait={activeScenario.recommendedAction.isWait}
+                justifications={activeScenario.recommendedAction.justifications}
+              />
             </div>
           </div>
 
           {/* Row 2: Mission Value Engine Flow (Col 8) & Forecast Graph (Col 4) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
             <div className="lg:col-span-8">
-              <MissionValueEngine />
+              <MissionValueEngine
+                steps={activeScenario.valueEngine.steps}
+                weights={activeScenario.valueEngine.weights}
+                valueScore={activeScenario.valueEngine.valueScore}
+                activeScenarioId={activeScenarioId}
+              />
             </div>
             <div className="lg:col-span-4">
-              <OutcomeLineChart />
+              <OutcomeLineChart
+                chartData={activeScenario.chartPoints}
+                activeScenarioId={activeScenarioId}
+                recommendedAction={activeScenario.recommendedAction.action}
+              />
             </div>
           </div>
 
