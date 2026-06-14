@@ -2,26 +2,28 @@ import React from 'react';
 
 export default function MissionContext() {
   return (
-    <div className="flex flex-col bg-[var(--surface)] border border-[var(--border-color)]">
-      <div className="bg-[var(--foreground)] text-[var(--surface)] px-3 py-2 text-xs font-bold uppercase tracking-widest border-b border-[var(--border-color)]">
-        Mission Context
-      </div>
-      <div className="p-3 grid grid-cols-2 gap-3 text-xs font-mono">
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-[var(--secondary)] uppercase tracking-widest">Platform</span>
-          <span className="font-bold text-[var(--primary)]">Lunar Surface Asset</span>
+    <div className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-5 flex flex-col justify-between">
+      <h3 className="text-sm font-bold text-white tracking-tight border-b border-[var(--border-color)] pb-2.5 mb-4 font-sans">
+        Platform Context
+      </h3>
+      <div className="flex flex-col gap-3 text-sm font-sans">
+        <div className="flex justify-between items-center pb-2 border-b border-white/5">
+          <span className="text-xs text-[var(--text-secondary)] font-medium">Platform</span>
+          <span className="font-semibold text-white">Lunar Surface Asset</span>
         </div>
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-[var(--secondary)] uppercase tracking-widest">Location</span>
-          <span className="font-bold text-[var(--foreground)]">Region 4</span>
+        <div className="flex justify-between items-center pb-2 border-b border-white/5">
+          <span className="text-xs text-[var(--text-secondary)] font-medium">Location</span>
+          <span className="font-semibold text-white font-mono text-xs">Region 4</span>
         </div>
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-[var(--secondary)] uppercase tracking-widest">Lunar Day</span>
-          <span className="font-bold text-[var(--foreground)]">11</span>
+        <div className="flex justify-between items-center pb-2 border-b border-white/5">
+          <span className="text-xs text-[var(--text-secondary)] font-medium">Lunar Day</span>
+          <span className="font-semibold text-white font-mono text-xs">Day 11</span>
         </div>
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-[var(--secondary)] uppercase tracking-widest">Mission Phase</span>
-          <span className="font-bold text-[var(--warning)]">Power Preservation</span>
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-[var(--text-secondary)] font-medium">Mission Phase</span>
+          <span className="px-2 py-0.5 rounded text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            Power Preservation
+          </span>
         </div>
       </div>
     </div>

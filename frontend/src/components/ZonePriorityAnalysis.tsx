@@ -20,20 +20,20 @@ export default function ZonePriorityAnalysis({ zones }: ZonePriorityAnalysisProp
   }).slice(0, 6); // Keep it compact
 
   return (
-    <div className="flex flex-col bg-[var(--surface)] border border-[var(--border-color)]">
-      <div className="bg-[var(--foreground)] text-[var(--surface)] px-3 py-2 text-xs font-bold uppercase tracking-widest border-b border-[var(--border-color)]">
-        Zone Priority Analysis
-      </div>
-      <div className="p-0 overflow-auto">
-        <table className="w-full text-left text-sm font-mono border-collapse">
-          <thead className="bg-[var(--background)] text-[var(--secondary)] text-[10px] uppercase sticky top-0 border-b border-[var(--border-color)]">
-            <tr>
-              <th className="p-2 border-r border-[var(--border-color)] text-center w-12">Zone</th>
-              <th className="p-2 border-r border-[var(--border-color)]">Dust %</th>
-              <th className="p-2 border-r border-[var(--border-color)]">Power Loss (W)</th>
-              <th className="p-2 border-r border-[var(--border-color)] text-[var(--success)]">Recovery Potential (W)</th>
-              <th className="p-2 border-r border-[var(--border-color)] text-[var(--warning)]">Cleaning Cost (Wh)</th>
-              <th className="p-2 text-[var(--primary)]">Mission Value</th>
+    <div className="bg-[var(--surface)] border border-[var(--border-color)] p-2.5 flex flex-col justify-between">
+      <h3 className="font-heading text-xs font-bold uppercase tracking-wider text-[var(--secondary)] border-b border-[var(--border-color)] pb-1 mb-2">
+        // Zone Priority Analysis (Sorted by Mission Value)
+      </h3>
+      <div className="overflow-auto">
+        <table className="w-full text-left text-[11px] font-mono border-collapse">
+          <thead>
+            <tr className="border-b border-slate-350 text-slate-500 uppercase text-[9px] tracking-wider">
+              <th className="py-1 px-2 text-center w-12 font-bold font-heading">Zone</th>
+              <th className="py-1 px-2 font-heading">Dust %</th>
+              <th className="py-1 px-2 font-heading">Power Loss (W)</th>
+              <th className="py-1 px-2 text-[var(--success)] font-heading">Recovery Pot.</th>
+              <th className="py-1 px-2 text-[var(--warning)] font-heading">Cost (Wh)</th>
+              <th className="py-1 px-2 text-right text-[var(--primary)] font-heading">Mission Value</th>
             </tr>
           </thead>
           <tbody>
@@ -42,24 +42,24 @@ export default function ZonePriorityAnalysis({ zones }: ZonePriorityAnalysisProp
               return (
                 <tr 
                   key={z.id} 
-                  className={`border-b border-[var(--border-color)] last:border-b-0 ${isTarget ? 'bg-[rgba(220,38,38,0.05)] border-l-4 border-l-[var(--critical)]' : 'hover:bg-[var(--surface-hover)] border-l-4 border-l-transparent'}`}
+                  className={`border-b border-slate-100 last:border-b-0 hover:bg-slate-50 ${isTarget ? 'bg-red-50/50 font-bold border-l-2 border-l-red-500' : ''}`}
                 >
-                  <td className="p-2 border-r border-[var(--border-color)] text-center font-bold text-[var(--foreground)]">
+                  <td className="py-1.5 px-2 text-center font-heading text-slate-900 font-bold">
                     {z.id}
                   </td>
-                  <td className={`p-2 border-r border-[var(--border-color)] ${isTarget ? 'text-[var(--critical)] font-bold' : ''}`}>
+                  <td className={`py-1.5 px-2 ${isTarget ? 'text-red-600' : 'text-slate-700'}`}>
                     {z.dustPercent}%
                   </td>
-                  <td className="p-2 border-r border-[var(--border-color)]">
-                    {z.powerContributionPercent}
+                  <td className="py-1.5 px-2 text-slate-600">
+                    {z.powerContributionPercent}W
                   </td>
-                  <td className="p-2 border-r border-[var(--border-color)] text-[var(--success)] font-bold">
-                    +{z.stats.recovery.toFixed(1)}
+                  <td className="py-1.5 px-2 text-[var(--success)]">
+                    +{z.stats.recovery.toFixed(1)}W
                   </td>
-                  <td className="p-2 border-r border-[var(--border-color)] text-[var(--warning)]">
+                  <td className="py-1.5 px-2 text-[var(--warning)]">
                     {z.stats.cost.toFixed(1)}
                   </td>
-                  <td className={`p-2 font-bold ${isTarget ? 'text-[var(--primary)] text-lg' : 'text-[var(--secondary)]'}`}>
+                  <td className={`py-1.5 px-2 text-right ${isTarget ? 'text-[var(--primary)] font-bold font-heading text-sm' : 'text-slate-500'}`}>
                     {z.stats.value}
                   </td>
                 </tr>

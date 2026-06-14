@@ -23,14 +23,14 @@ export default function DashboardPage() {
       <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 min-h-0">
         
         {/* Left Column (Col 1-3): Context, State, Constraints */}
-        <div className="lg:col-span-3 flex flex-col gap-3 min-h-0">
+        <div className="lg:col-span-3 flex flex-col gap-3 min-h-0 justify-between">
           <MissionContext />
           <MissionStatus telemetry={telemetry} />
           <ConstraintsPanel constraints={constraints} />
         </div>
 
-        {/* Center Column (Col 4-8): Map, Priority Analysis */}
-        <div className="lg:col-span-5 flex flex-col gap-3 min-h-0">
+        {/* Center Column (Col 4-9): Map, Priority Analysis (Highly Dominant) */}
+        <div className="lg:col-span-6 flex flex-col gap-3 min-h-0">
           <div className="flex-1 min-h-0">
             <SurfaceMap zones={zones} />
           </div>
@@ -39,11 +39,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Right Column (Col 9-12): Action Report, Outcome Comparison, Matrix */}
-        <div className="lg:col-span-4 flex flex-col gap-3 min-h-0">
+        {/* Right Column (Col 10-12): Action Report, Outcome Comparison, Matrix */}
+        <div className="lg:col-span-3 flex flex-col gap-3 min-h-0 justify-between">
           <MissionActionReport />
           <OutcomeComparison />
-          <div className="flex-1 min-h-0 overflow-auto">
+          <div className="flex-none">
             <ScenarioMatrix scenarios={scenarios} />
           </div>
         </div>
