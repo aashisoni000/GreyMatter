@@ -22,7 +22,7 @@ export default function ZonePriorityAnalysis({ zones }: ZonePriorityAnalysisProp
   return (
     <div className="bg-[var(--surface)] border border-[var(--border-color)] p-2.5 flex flex-col justify-between">
       <h3 className="font-heading text-xs font-bold uppercase tracking-wider text-[var(--secondary)] border-b border-[var(--border-color)] pb-1 mb-2">
-        // Zone Priority Analysis (Sorted by Mission Value)
+        Zone Priority Analysis (Sorted by Mission Value)
       </h3>
       <div className="overflow-auto">
         <table className="w-full text-left text-[11px] font-mono border-collapse">
