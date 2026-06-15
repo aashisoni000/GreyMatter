@@ -1,0 +1,639 @@
+(kicad_sch
+  (version 20231120)
+  (generator "grey_matter_gen")
+  (paper "A2")
+
+  (title_block
+    (title "GREY MATTER - Lunar Dust Mitigation PCB")
+    (date "2026-06-13")
+    (rev "1.0")
+    (company "GrayMatter / FAR AWAY 2026")
+    (comment 1 "Mission-Aware Zone-Level Electrostatic Cleaning System")
+    (comment 2 "Regions: Telemetry | Mission Controller | Power | HV Driver | Zone Outputs")
+  )
+
+  ;; ─────────────────────────────────────────────────────────────
+  ;; REGION 1 — TELEMETRY INPUTS (Top-Left)
+  ;; ─────────────────────────────────────────────────────────────
+
+  ;; Dust Sensor connector
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x04")
+    (at 30 30 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "J1" (at 30 27 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "DUST_SENSOR" (at 30 24 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; INA219 Current Monitor
+  (symbol
+    (lib_id "Sensor_Current:INA219xDCN")
+    (at 55 30 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "U1" (at 55 22 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "INA219" (at 55 19 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Temperature Sensor
+  (symbol
+    (lib_id "Sensor_Temperature:LM75BD")
+    (at 30 55 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "U2" (at 30 47 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "LM75B" (at 30 44 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Light Sensor (optional)
+  (symbol
+    (lib_id "Sensor_Optical:VEML7700")
+    (at 55 55 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "U3" (at 55 47 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "VEML7700" (at 55 44 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-23-6" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Region 1 Label
+  (text "[ REGION 1: TELEMETRY INPUTS ]"
+    (at 42 15 0)
+    (effects (font (size 2 2) (bold yes)) (justify left))
+  )
+
+  ;; I2C pull-ups for sensors
+  (symbol
+    (lib_id "Device:R")
+    (at 80 30 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "R1" (at 83 28 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "4.7k" (at 83 31 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Device:R")
+    (at 80 40 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "R2" (at 83 38 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "4.7k" (at 83 41 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; ─────────────────────────────────────────────────────────────
+  ;; REGION 2 — MISSION CONTROLLER (Center)
+  ;; ─────────────────────────────────────────────────────────────
+
+  ;; ESP32-WROOM module
+  (symbol
+    (lib_id "RF_Module:ESP32-WROOM-32")
+    (at 160 60 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "U4" (at 160 20 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ESP32-WROOM-32" (at 160 17 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "RF_Module:ESP32-WROOM-32" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; External Flash Memory
+  (symbol
+    (lib_id "Memory_Flash:W25Q32JV")
+    (at 200 30 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "U5" (at 200 22 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "W25Q32JV" (at 200 19 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Debug/Programming Header (UART)
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x06")
+    (at 200 70 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "J2" (at 200 55 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "DEBUG_UART" (at 200 52 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Reset + Boot buttons
+  (symbol
+    (lib_id "Device:SW_Push")
+    (at 220 30 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "SW1" (at 220 25 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "RESET" (at 220 22 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Button_Switch_SMD:SW_SPST_TL3342" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Device:SW_Push")
+    (at 235 30 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "SW2" (at 235 25 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BOOT" (at 235 22 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Button_Switch_SMD:SW_SPST_TL3342" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Status LEDs
+  (symbol
+    (lib_id "Device:LED")
+    (at 220 50 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "LED1" (at 220 45 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "SYS_OK" (at 220 42 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "LED_SMD:LED_0402_1005Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Device:LED")
+    (at 235 50 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "LED2" (at 235 45 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MISSION_ACT" (at 235 42 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "LED_SMD:LED_0402_1005Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; LED resistors
+  (symbol
+    (lib_id "Device:R")
+    (at 220 58 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "R3" (at 223 56 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "330R" (at 223 59 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Device:R")
+    (at 235 58 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "R4" (at 238 56 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "330R" (at 238 59 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Expansion Header
+  (symbol
+    (lib_id "Connector_Generic:Conn_02x10_Odd_Even")
+    (at 245 60 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "J3" (at 245 42 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "EXPANSION" (at 245 39 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_2x10_P2.54mm_Vertical" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Region 2 Label
+  (text "[ REGION 2: MISSION CONTROLLER ]"
+    (at 155 12 0)
+    (effects (font (size 2 2) (bold yes)) (justify left))
+  )
+
+  ;; ─────────────────────────────────────────────────────────────
+  ;; REGION 3 — POWER MANAGEMENT (Bottom-Center)
+  ;; ─────────────────────────────────────────────────────────────
+
+  ;; Battery input connector
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 100 150 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "J4" (at 100 145 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BATT_IN" (at 100 142 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; LDO 5V regulator
+  (symbol
+    (lib_id "Regulator_Linear:LM7805_TO220")
+    (at 130 150 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "U6" (at 130 142 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "LM7805" (at 130 139 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; LDO 3.3V regulator
+  (symbol
+    (lib_id "Regulator_Linear:AMS1117-3.3")
+    (at 160 150 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "U7" (at 160 142 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AMS1117-3.3" (at 160 139 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-223-3_TabPin2" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Bulk caps 5V rail
+  (symbol
+    (lib_id "Device:C")
+    (at 145 155 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "C1" (at 148 153 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "100uF" (at 148 156 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Capacitor_SMD:C_1210_3225Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Decoupling cap 3.3V rail
+  (symbol
+    (lib_id "Device:C")
+    (at 175 155 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "C2" (at 178 153 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "10uF" (at 178 156 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Reverse polarity protection diode
+  (symbol
+    (lib_id "Device:D_Schottky")
+    (at 115 150 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "D1" (at 115 145 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "SS14" (at 115 142 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Diode_SMD:D_SMA" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Fuse
+  (symbol
+    (lib_id "Device:Fuse")
+    (at 107 150 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "F1" (at 107 145 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "2A" (at 107 142 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Fuse:Fuse_1206_3216Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; RTC module
+  (symbol
+    (lib_id "Timer_RTC:DS3231M")
+    (at 195 150 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "U8" (at 195 140 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "DS3231M" (at 195 137 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; SD Card slot
+  (symbol
+    (lib_id "Connector:SD_Card_Std_Spd")
+    (at 220 150 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "J5" (at 220 140 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "SD_CARD" (at 220 137 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_Card:SD_Wuerth_693072010801" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Region 3 Label
+  (text "[ REGION 3: POWER MANAGEMENT ]"
+    (at 98 135 0)
+    (effects (font (size 2 2) (bold yes)) (justify left))
+  )
+
+  ;; ─────────────────────────────────────────────────────────────
+  ;; REGION 4 — HV DRIVER / ELECTROSTATIC ACTUATION (Right, Isolated)
+  ;; ─────────────────────────────────────────────────────────────
+
+  ;; Optocoupler isolation (LV to HV boundary)
+  (symbol
+    (lib_id "Isolator:PC817")
+    (at 290 50 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "U9" (at 290 42 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "PC817" (at 290 39 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_DIP:DIP-4_W7.62mm" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Isolator:PC817")
+    (at 290 70 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "U10" (at 290 62 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "PC817" (at 290 59 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_DIP:DIP-4_W7.62mm" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; N-Channel MOSFET drivers (HV side)
+  (symbol
+    (lib_id "Device:Q_NMOS_GSD")
+    (at 320 50 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "Q1" (at 320 42 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "IRF540N" (at 320 39 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Device:Q_NMOS_GSD")
+    (at 320 70 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "Q2" (at 320 62 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "IRF540N" (at 320 59 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Device:Q_NMOS_GSD")
+    (at 320 90 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "Q3" (at 320 82 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "IRF540N" (at 320 79 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Device:Q_NMOS_GSD")
+    (at 320 110 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "Q4" (at 320 102 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "IRF540N" (at 320 99 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Gate resistors (prevent ringing)
+  (symbol
+    (lib_id "Device:R")
+    (at 308 50 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "R5" (at 311 48 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "100R" (at 311 51 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Device:R")
+    (at 308 70 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "R6" (at 311 68 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "100R" (at 311 71 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Device:R")
+    (at 308 90 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "R7" (at 311 88 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "100R" (at 311 91 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  (symbol
+    (lib_id "Device:R")
+    (at 308 110 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "R8" (at 311 108 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "100R" (at 311 111 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; TVS diode protection on HV lines
+  (symbol
+    (lib_id "Device:D_TVS")
+    (at 335 50 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "D2" (at 335 45 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "P6KE200A" (at 335 42 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Diode_THT:D_DO-15_P3.81mm_Horizontal" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; HV Input connector
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 350 60 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "J6" (at 350 55 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "HV_IN" (at 350 52 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_Phoenix_MC:PhoenixContact_MC_1,5_2-G-3.5_1x02_P3.50mm_Angled" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Region 4 Label
+  (text "[ REGION 4: ELECTROSTATIC ACTUATION — HV ISOLATED ]"
+    (at 285 35 0)
+    (effects (font (size 2 2) (bold yes)) (justify left))
+  )
+
+  ;; HV Warning text
+  (text "⚠ HIGH VOLTAGE — MAINTAIN CLEARANCE"
+    (at 290 130 0)
+    (effects (font (size 1.5 1.5) (bold yes)) (justify left))
+  )
+
+  ;; ─────────────────────────────────────────────────────────────
+  ;; REGION 5 — ZONE CONTROL OUTPUTS (Far Right)
+  ;; ─────────────────────────────────────────────────────────────
+
+  ;; Zone A Output
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x03")
+    (at 370 50 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "J7" (at 370 43 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ZONE_A" (at 370 40 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_Phoenix_MC:PhoenixContact_MC_1,5_3-G-3.5_1x03_P3.50mm_Angled" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Zone B Output
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x03")
+    (at 370 70 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "J8" (at 370 63 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ZONE_B" (at 370 60 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_Phoenix_MC:PhoenixContact_MC_1,5_3-G-3.5_1x03_P3.50mm_Angled" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Zone C Output
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x03")
+    (at 370 90 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "J9" (at 370 83 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ZONE_C" (at 370 80 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_Phoenix_MC:PhoenixContact_MC_1,5_3-G-3.5_1x03_P3.50mm_Angled" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Zone D Output
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x03")
+    (at 370 110 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "J10" (at 370 103 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ZONE_D" (at 370 100 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_Phoenix_MC:PhoenixContact_MC_1,5_3-G-3.5_1x03_P3.50mm_Angled" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; Region 5 Label
+  (text "[ REGION 5: INDEPENDENT ZONE OUTPUTS ]"
+    (at 365 35 0)
+    (effects (font (size 2 2) (bold yes)) (justify left))
+  )
+
+  ;; ─────────────────────────────────────────────────────────────
+  ;; POWER FLAGS (required by KiCad ERC)
+  ;; ─────────────────────────────────────────────────────────────
+
+  (symbol
+    (lib_id "power:PWR_FLAG")
+    (at 100 170 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "#PWR01" (at 100 176 0) (effects (font (size 1.27 1.27)) hide))
+    (property "Value" "+5V" (at 100 165 0) (effects (font (size 1.27 1.27))))
+  )
+
+  (symbol
+    (lib_id "power:PWR_FLAG")
+    (at 115 170 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "#PWR02" (at 115 176 0) (effects (font (size 1.27 1.27)) hide))
+    (property "Value" "+3V3" (at 115 165 0) (effects (font (size 1.27 1.27))))
+  )
+
+  (symbol
+    (lib_id "power:PWR_FLAG")
+    (at 130 170 0)
+    (unit 1)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "#PWR03" (at 130 176 0) (effects (font (size 1.27 1.27)) hide))
+    (property "Value" "GND" (at 130 165 0) (effects (font (size 1.27 1.27))))
+  )
+
+  ;; ─────────────────────────────────────────────────────────────
+  ;; GLOBAL POWER NETS
+  ;; ─────────────────────────────────────────────────────────────
+
+  (global_label "+3V3" (shape input) (at 80 80 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "+5V" (shape input) (at 80 85 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "GND" (shape input) (at 80 90 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "I2C_SDA" (shape bidirectional) (at 80 95 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "I2C_SCL" (shape bidirectional) (at 80 100 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "SPI_MOSI" (shape output) (at 80 105 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "SPI_MISO" (shape input) (at 80 110 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "SPI_SCK" (shape output) (at 80 115 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "ZONE_A_CTRL" (shape output) (at 260 50 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "ZONE_B_CTRL" (shape output) (at 260 60 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "ZONE_C_CTRL" (shape output) (at 260 70 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "ZONE_D_CTRL" (shape output) (at 260 80 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "HV_ISOL_A" (shape output) (at 340 50 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "HV_ISOL_B" (shape output) (at 340 70 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "HV_ISOL_C" (shape output) (at 340 90 0)
+    (effects (font (size 1.27 1.27)))
+  )
+  (global_label "HV_ISOL_D" (shape output) (at 340 110 0)
+    (effects (font (size 1.27 1.27)))
+  )
+
+)
